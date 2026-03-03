@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (
@@ -29,16 +30,36 @@ export default function Home() {
           </div>
           <span className="text-xl font-bold tracking-tight">AIshorts<span className="text-indigo-600">-gen</span></span>
         </div>
-        <div className="hidden items-center gap-8 md:flex">
-          <Link href="#features" className="text-sm font-medium transition-colors hover:text-indigo-600">Features</Link>
-          <Link href="#platforms" className="text-sm font-medium transition-colors hover:text-indigo-600">Platforms</Link>
-          <Link href="#pricing" className="text-sm font-medium transition-colors hover:text-indigo-600">Pricing</Link>
-          <Button variant="ghost" className="text-sm font-medium">Log in</Button>
-          <Button className="bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700">Get Started</Button>
+        <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-8 md:flex">
+            <Link href="#features" className="text-sm font-medium transition-colors hover:text-indigo-600">Features</Link>
+            <Link href="#platforms" className="text-sm font-medium transition-colors hover:text-indigo-600">Platforms</Link>
+            <Link href="#pricing" className="text-sm font-medium transition-colors hover:text-indigo-600">Pricing</Link>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button variant="ghost" className="text-sm font-medium">Log in</Button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <Button className="bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700">Get Started</Button>
+              </SignUpButton>
+            </SignedOut>
+
+            <SignedIn>
+              <Link href="/dashboard">
+                <Button variant="ghost" className="text-sm font-medium">Dashboard</Button>
+              </Link>
+            </SignedIn>
+          </div>
+
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+          </Button>
         </div>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
-        </Button>
       </nav>
 
       <main className="flex-1">
@@ -55,9 +76,20 @@ export default function Home() {
               Create high-quality short-form videos for YouTube, Instagram, and TikTok using AI. Auto-schedule them across all your socials and never miss a beat.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button size="lg" className="h-12 bg-indigo-600 px-8 text-white hover:bg-indigo-700 sm:w-auto">
-                Generate My First Video <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <SignedOut>
+                <SignUpButton mode="modal">
+                  <Button size="lg" className="h-12 bg-indigo-600 px-8 text-white hover:bg-indigo-700 sm:w-auto">
+                    Generate My First Video <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <Link href="/dashboard">
+                  <Button size="lg" className="h-12 bg-indigo-600 px-8 text-white hover:bg-indigo-700 sm:w-auto">
+                    Go to Dashboard <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </SignedIn>
               <Button size="lg" variant="outline" className="h-12 border-zinc-200 px-8 dark:border-zinc-800">
                 View Examples
               </Button>
@@ -230,9 +262,20 @@ export default function Home() {
             <p className="mx-auto mb-10 max-w-2xl text-xl text-indigo-100">
               Join 10,000+ creators who are scaling their brand with AIshorts-gen. No credit card required to start.
             </p>
-            <Button size="lg" variant="secondary" className="h-14 bg-white px-10 text-lg font-bold text-indigo-600 hover:bg-zinc-100">
-              Get Started for Free
-            </Button>
+            <SignedOut>
+              <SignUpButton mode="modal">
+                <Button size="lg" variant="secondary" className="h-14 bg-white px-10 text-lg font-bold text-indigo-600 hover:bg-zinc-100">
+                  Get Started for Free
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard">
+                <Button size="lg" variant="secondary" className="h-14 bg-white px-10 text-lg font-bold text-indigo-600 hover:bg-zinc-100">
+                  Go to Dashboard
+                </Button>
+              </Link>
+            </SignedIn>
           </div>
         </section>
       </main>
@@ -292,6 +335,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }
