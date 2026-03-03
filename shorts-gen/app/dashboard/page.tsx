@@ -32,10 +32,12 @@ export default async function Dashboard() {
                         <span className="text-xl font-bold">AIshorts</span>
                     </div>
 
-                    <Button className="w-full justify-start gap-2 bg-indigo-600 text-white hover:bg-indigo-700 mb-6 font-semibold">
-                        <Plus className="h-5 w-5" />
-                        Create New Series
-                    </Button>
+                    <Link href="/dashboard/create">
+                        <Button className="w-full justify-start gap-2 bg-indigo-600 text-white hover:bg-indigo-700 mb-6 font-semibold">
+                            <Plus className="h-5 w-5" />
+                            Create New Series
+                        </Button>
+                    </Link>
 
                     <nav className="space-y-1">
                         <NavItem href="/dashboard" icon={<LayoutDashboard className="h-5 w-5" />} label="Dashboard" active />
@@ -100,8 +102,8 @@ function NavItem({ href, icon, label, active = false }: { href: string, icon: Re
         <Link
             href={href}
             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${active
-                    ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400"
-                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400"
+                : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                 }`}
         >
             {icon}
