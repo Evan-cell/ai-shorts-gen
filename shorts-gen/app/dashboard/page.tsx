@@ -2,8 +2,11 @@ import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, Video, Settings, BarChart } from "lucide-react";
+import { syncUser } from "@/lib/user-sync";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+    await syncUser();
+
     return (
         <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
             {/* Sidebar */}

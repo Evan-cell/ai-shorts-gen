@@ -30,30 +30,36 @@ export default function Home() {
           </div>
           <span className="text-xl font-bold tracking-tight">AIshorts<span className="text-indigo-600">-gen</span></span>
         </div>
-        <div className="hidden items-center gap-8 md:flex">
-          <Link href="#features" className="text-sm font-medium transition-colors hover:text-indigo-600">Features</Link>
-          <Link href="#platforms" className="text-sm font-medium transition-colors hover:text-indigo-600">Platforms</Link>
-          <Link href="#pricing" className="text-sm font-medium transition-colors hover:text-indigo-600">Pricing</Link>
+        <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-8 md:flex">
+            <Link href="#features" className="text-sm font-medium transition-colors hover:text-indigo-600">Features</Link>
+            <Link href="#platforms" className="text-sm font-medium transition-colors hover:text-indigo-600">Platforms</Link>
+            <Link href="#pricing" className="text-sm font-medium transition-colors hover:text-indigo-600">Pricing</Link>
 
-          <SignedOut>
-            <SignInButton mode="modal">
-              <Button variant="ghost" className="text-sm font-medium">Log in</Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <Button className="bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700">Get Started</Button>
-            </SignUpButton>
-          </SignedOut>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button variant="ghost" className="text-sm font-medium">Log in</Button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <Button className="bg-indigo-600 text-sm font-medium text-white hover:bg-indigo-700">Get Started</Button>
+              </SignUpButton>
+            </SignedOut>
+
+            <SignedIn>
+              <Link href="/dashboard">
+                <Button variant="ghost" className="text-sm font-medium">Dashboard</Button>
+              </Link>
+            </SignedIn>
+          </div>
 
           <SignedIn>
-            <Link href="/dashboard">
-              <Button variant="ghost" className="text-sm font-medium">Dashboard</Button>
-            </Link>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
+
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+          </Button>
         </div>
-        <Button variant="ghost" size="icon" className="md:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
-        </Button>
       </nav>
 
       <main className="flex-1">
@@ -329,6 +335,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }

@@ -56,9 +56,9 @@ export async function POST(req: Request) {
         const name = `${first_name ?? ''} ${last_name ?? ''}`.trim()
 
         const { error } = await supabase
-            .from('users')
+            .from('app_users')
             .insert({
-                id: id,
+                clerk_id: id,
                 email: email,
                 name: name,
             })
