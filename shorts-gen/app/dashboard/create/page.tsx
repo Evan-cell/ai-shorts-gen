@@ -3,10 +3,14 @@
 import * as React from "react"
 import { Stepper } from "@/components/create/Stepper"
 import { NicheSelection } from "@/components/create/NicheSelection"
+import { LanguageVoiceSelection } from "@/components/create/LanguageVoiceSelection"
+import { MusicSelection } from "@/components/create/MusicSelection"
+import { VideoStyleSelection } from "@/components/create/VideoStyleSelection"
+import { CaptionStyleSelection } from "@/components/create/CaptionStyleSelection"
+import { SeriesDetails } from "@/components/create/SeriesDetails"
 import { FormFooter } from "@/components/create/FormFooter"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft } from "lucide-react"
-import Link from "next/link"
 
 export default function CreateSeriesPage() {
     const [currentStep, setCurrentStep] = React.useState(1)
@@ -17,7 +21,13 @@ export default function CreateSeriesPage() {
         niche: "",
         language: "",
         voice: "",
-        // Future steps will add more fields here
+        backgroundMusic: "",
+        videoStyle: "",
+        captionStyle: "",
+        seriesName: "",
+        duration: "30-50",
+        platform: "Tiktok",
+        scheduleTime: "12:00",
     })
 
     const handleNext = (stepData: Partial<typeof formData>) => {
@@ -33,53 +43,81 @@ export default function CreateSeriesPage() {
         }
     }
 
+    const handleFinalSchedule = (finalData: Partial<typeof formData>) => {
+        const submissionData = { ...formData, ...finalData }
+        console.log("Scheduling Series with data:", submissionData)
+        // This will be connected to the backend/supabase later
+        alert("Series Scheduled Successfully! Check console for data.")
+    }
+
     return (
-        <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col">
-            {/* Header */}
-            <header className="h-16 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 px-8 flex items-center justify-between sticky top-0 z-10">
-                <div className="flex items-center gap-4">
-                    <Link href="/dashboard">
-                        <Button variant="ghost" size="icon" className="rounded-full">
-                            <ChevronLeft className="h-5 w-5" />
-                        </Button>
-                    </Link>
-                    <h1 className="text-xl font-bold">Create New Series</h1>
-                </div>
-                <div className="text-sm font-medium text-zinc-500">
-                    Step {currentStep} of {totalSteps}
+        <div className="max-w-4xl mx-auto p-8 pb-32">
+            <header className="flex items-center gap-4 mb-10">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full"
+                    onClick={handleBack}
+                    disabled={currentStep === 1}
+                >
+                    <ChevronLeft className="h-6 w-6" />
+                </Button>
+                <div>
+                    <h1 className="text-2xl font-bold">Create New Series</h1>
+                    <p className="text-zinc-500 dark:text-zinc-400 text-sm">Step {currentStep} of {totalSteps}</p>
                 </div>
             </header>
 
-            {/* Main Content */}
-            <main className="flex-1 flex flex-col items-center py-12 px-6">
-                <div className="w-full max-w-2xl">
-                    <Stepper currentStep={currentStep} totalSteps={totalSteps} />
+            <Stepper currentStep={currentStep} totalSteps={totalSteps} />
 
-                    <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm p-8 transition-all duration-500">
-                        {currentStep === 1 && (
-                            <NicheSelection
-                                value={formData.niche}
-                                onContinue={(niche) => handleNext({ niche })}
-                            />
-                        )}
+            <div className="mt-8 transition-all duration-500">
+                {currentStep === 1 && (
+                    <NicheSelection
+                        value={formData.niche}
+                        onContinue={(niche) => handleNext({ niche })}
+                    />
+                )}
 
-                        {currentStep > 1 && (
-                            <div className="text-center py-20 flex flex-col items-center">
-                                <h2 className="text-2xl font-bold mb-4">Step {currentStep}</h2>
-                                <p className="text-zinc-500 dark:text-zinc-400 mb-8 max-w-xs">This step is coming soon!</p>
-                                <div className="w-full max-w-md mt-10">
-                                    <FormFooter
-                                        onNext={() => handleNext({})}
-                                        onBack={handleBack}
-                                        canContinue={true}
-                                        showBack={true}
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </main>
+                {currentStep === 2 && (
+                    <LanguageVoiceSelection
+                        formData={formData}
+                        onContinue={(data) => handleNext(data)}
+                        onBack={handleBack}
+                    />
+                )}
+
+                {currentStep === 3 && (
+                    <MusicSelection
+                        value={formData.backgroundMusic}
+                        onContinue={(backgroundMusic) => handleNext({ backgroundMusic })}
+                        onBack={handleBack}
+                    />
+                )}
+
+                {currentStep === 4 && (
+                    <VideoStyleSelection
+                        value={formData.videoStyle}
+                        onContinue={(videoStyle) => handleNext({ videoStyle })}
+                        onBack={handleBack}
+                    />
+                )}
+
+                {currentStep === 5 && (
+                    <CaptionStyleSelection
+                        value={formData.captionStyle}
+                        onContinue={(captionStyle) => handleNext({ captionStyle })}
+                        onBack={handleBack}
+                    />
+                )}
+
+                {currentStep === 6 && (
+                    <SeriesDetails
+                        formData={formData}
+                        onBack={handleBack}
+                        onContinue={handleFinalSchedule}
+                    />
+                )}
+            </div>
         </div>
     )
 }
