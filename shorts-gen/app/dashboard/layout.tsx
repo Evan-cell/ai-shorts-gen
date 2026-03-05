@@ -1,5 +1,8 @@
+"use client"
+
 import { UserButton } from "@clerk/nextjs"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
     LayoutDashboard,
@@ -19,6 +22,8 @@ export default function DashboardLayout({
 }: {
     children: React.ReactNode
 }) {
+    const pathname = usePathname()
+
     return (
         <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
             {/* Sidebar */}
@@ -39,12 +44,12 @@ export default function DashboardLayout({
                     </Link>
 
                     <nav className="space-y-1">
-                        <NavItem href="/dashboard" icon={<LayoutDashboard className="h-5 w-5" />} label="Dashboard" />
-                        <NavItem href="#" icon={<Layers className="h-5 w-5" />} label="Series" />
-                        <NavItem href="#" icon={<Video className="h-5 w-5" />} label="Videos" />
-                        <NavItem href="#" icon={<BookOpen className="h-5 w-5" />} label="Guides" />
-                        <NavItem href="#" icon={<CreditCard className="h-5 w-5" />} label="Billing" />
-                        <NavItem href="#" icon={<Settings className="h-5 w-5" />} label="Settings" />
+                        <NavItem href="/dashboard" icon={<LayoutDashboard className="h-5 w-5" />} label="Dashboard" active={pathname === "/dashboard"} />
+                        <NavItem href="/dashboard/series" icon={<Layers className="h-5 w-5" />} label="Series" active={pathname === "/dashboard/series"} />
+                        <NavItem href="/dashboard/videos" icon={<Video className="h-5 w-5" />} label="Videos" active={pathname === "/dashboard/videos"} />
+                        <NavItem href="/dashboard/guides" icon={<BookOpen className="h-5 w-5" />} label="Guides" active={pathname === "/dashboard/guides"} />
+                        <NavItem href="/dashboard/billing" icon={<CreditCard className="h-5 w-5" />} label="Billing" active={pathname === "/dashboard/billing"} />
+                        <NavItem href="/dashboard/settings" icon={<Settings className="h-5 w-5" />} label="Settings" active={pathname === "/dashboard/settings"} />
                     </nav>
                 </div>
 

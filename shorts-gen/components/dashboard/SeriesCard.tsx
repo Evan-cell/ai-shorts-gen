@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 import { formatDistanceToNow } from "date-fns"
 import {
     MoreVertical,
@@ -32,6 +33,8 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { VideoStyles } from "@/constants/create"
 
+import { toast } from "sonner"
+
 interface SeriesCardProps {
     series: {
         id: string
@@ -46,14 +49,53 @@ interface SeriesCardProps {
 }
 
 export function SeriesCard({ series, onDelete, onStatusChange, onEdit }: SeriesCardProps) {
+    const [isGenerating, setIsGenerating] = React.useState(false)
+    const router = useRouter()
+
     // Find the corresponding thumbnail image from VideoStyles constant
     const styleInfo = VideoStyles.find(s => s.name === series.video_style)
     const thumbnail = styleInfo?.image || "/placeholder-video.png"
 
+    const handleGenerate = async () => {
+        console.log("DEBUG: SeriesCard.handleGenerate called for series:", JSON.stringify(series));
+        if (!series.id) {
+            console.error("DEBUG: Series ID is missing in SeriesCard!");
+            toast.error("Error: Series ID is missing");
+            return;
+        }
+        setIsGenerating(true)
+        const toastId = toast.loading("Starting video generation...")
+
+        try {
+            console.log("DEBUG: Fetching /api/series/generate with id:", series.id);
+            const response = await fetch("/api/series/generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ seriesId: series.id }),
+            })
+
+            const result = await response.json()
+
+            if (!response.ok) {
+                throw new Error(result.error || "Failed to start generation")
+            }
+
+            toast.success("Generation started successfully!", { id: toastId })
+            router.push("/dashboard/videos")
+        } catch (error: any) {
+            console.error("Generation Error:", error)
+            toast.error(error.message || "Something went wrong", { id: toastId })
+        } finally {
+            setIsGenerating(false)
+        }
+    }
+
     return (
         <Card className="group overflow-hidden border-2 transition-all hover:border-indigo-500/50 hover:shadow-md dark:bg-zinc-900/50">
-            {/* Thumbnail Header - Changed to 16:9 for half height */}
-            <div className="relative aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+            {/* Thumbnail Header - Changed to square for half height */}
+            <div className="relative aspect-square w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                 <Image
                     src={thumbnail}
                     alt={series.name}
@@ -131,9 +173,14 @@ export function SeriesCard({ series, onDelete, onStatusChange, onEdit }: SeriesC
                         View
                         <ExternalLink className="h-2.5 w-2.5 opacity-50" />
                     </Button>
-                    <Button size="sm" className="w-full gap-1.5 h-8 text-[11px] px-2 bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900">
-                        <Zap className="h-3 w-3 text-amber-500 fill-amber-500" />
-                        Generate
+                    <Button
+                        size="sm"
+                        className="w-full gap-1.5 h-8 text-[11px] px-2 bg-zinc-900 dark:bg-zinc-100 dark:text-zinc-900"
+                        onClick={handleGenerate}
+                        disabled={isGenerating}
+                    >
+                        <Zap className={cn("h-3 w-3 text-amber-500 fill-amber-500", isGenerating && "animate-pulse")} />
+                        {isGenerating ? "Generating..." : "Generate"}
                     </Button>
                 </div>
             </CardContent>
